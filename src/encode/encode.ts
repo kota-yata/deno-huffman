@@ -1,7 +1,7 @@
-import { occurrenceArray, treeArray } from '../../global.d.ts';
-import { getOccurence } from './occurrence.ts';
-import { generateTree } from './tree.ts';
-import { generateBitsArray, generateResultBits } from './result.ts';
+import { occurrenceArray, treeArray } from "../../global.d.ts";
+import { getOccurence } from "./occurrence.ts";
+import { generateTree } from "./tree.ts";
+import { generateBitsArray, generateResultBits } from "./result.ts";
 
 export const encodeHuffman = (plane: string) => {
   const occurrenceArray: occurrenceArray = getOccurence(plane);
@@ -12,4 +12,4 @@ export const encodeHuffman = (plane: string) => {
   generateBitsArray(huffmanTree, stringArray, bitArray);
   const result: string = generateResultBits(plane, stringArray, bitArray);
   return result;
-}
+};
