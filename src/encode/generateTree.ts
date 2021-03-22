@@ -1,5 +1,5 @@
 import { occurrenceArray, treeArray } from "../../global.d.ts";
-import { sortQuickly } from '../common/sort.ts';
+import { sortQuickly } from "./sort.ts";
 
 export const generateTree = (
   occurrenceArray: occurrenceArray,

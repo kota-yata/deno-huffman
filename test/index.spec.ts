@@ -1,24 +1,41 @@
-import { encodeHuffman, decodeHuffman } from "../src/index.ts";
+import { encodeHuffman } from "../src/encode/encode.ts";
+import { decodeHuffman } from "../src/decode/decode.ts";
 
 const green: string = "\u001b[32m";
+const red: string = "\u001b[31m";
 const reset: string = "\u001b[0m";
 
-const checkCompressionPerformance = (text: string) => {
-  const original: string = Array.from((new TextEncoder()).encode(text)).map(
-    (v) => v.toString(2),
-  ).join("");
-  const result: string = encodeHuffman(text)[0];
-  console.log(`Original text => ${original}`);
-  console.log(`Encoded text => ${result}`);
+const huffmanTest = (text: string) => {
   console.log(
-    `Compression quality is ${green}${original.length / result.length}${reset}`,
+    `\n${green}-------------------- 😀 Huffman Test --------------------${reset}`,
+  );
+  console.log(`      Original Text | ${text}`)
+  let original: string = "";
+  for (let i = 0; i < text.length; i++) {
+    original += text[i].charCodeAt(0).toString(2);
+  }
+  const result: string = encodeHuffman(text);
+  const compressionQuality: number =
+    Math.round(result.length / original.length * 10000) / 100;
+  console.log(`Compression Quality | ${compressionQuality}%`);
+  const lengthDiff: number = result.length - original.length;
+  const displayDiff: string = lengthDiff >= 0
+    ? `${red}${lengthDiff}${reset}`
+    : `${green}${lengthDiff}${reset}`;
+  console.log(
+    `      Length Change | ${original.length} => ${result.length} (${displayDiff})`,
+  );
+  const decoded: string = decodeHuffman(result);
+  if(decoded !== text) throw new Error(`Decode result must be ${text}, but got ${decoded}`);
+  console.log(
+    `${green}---------------　🎉 Successfully passed!!　---------------${reset}\n`,
   );
 };
 
-const emp =
-  `'A path from a point approximatZZZZZZelykjhkjhjlxdfzhß˙†´∆¥´¥® 330 metresZZZZZあsdファ井上おあかさたなdさsd垢オアシス赤青しろ緑ZGHKUYGUQOJWFO+BSA+BSUo;bobu;vargae@gpkte32041941902810924898645ssdf¥¥sd¥zsef¥¥||f¥sdvsewa|f sevawe/__sef= east of the most south westerly corner of 17 Batherton Close, Widnes and approximately 208 metres east-south-east of the most southerly corner of Unit 3 Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately 28 metres to a point approximately 202 metres east-south-east of the most south-easterly corner of Unit 4 Foundry Industrial Estate, Victoria Street, and approximately 347 metres east of the most south-easterly corner of 17 Batherton Close, then proceeding in a generally northerly direction for approximately 21 metres to a point approximately 210 metres east of the most south-easterly corner of Unit 5 Foundry Industrial Estate, Victoria Street, and approximately 202 metres east-south-east of the most north-easterly corner of Unit 4 Foundry Industrial Estate, Victoria Street, then proceeding in a generally east-north-east direction for approximately 64 metres to a point approximately 282 metres east-south-east of the most easterly corner of Unit 2 Foundry Industrial Estate, Victoria Street, Widnes and approximately 259 metres east of the most southerly corner of Unit 4 Foundry Industrial Estate, Victoria Street, then proceeding in a generally east-north-east direction for approximately 350 metres to a point approximately 3 metres west-north-west of the most north westerly corner of the boundary fence of the scrap metal yard on the south side of Cornubia Road, Widnes, and approximately 47 metres west-south-west of the stub end of Cornubia Road be diverted to a 3 metre wide path from a point approximately 183 metres east-south-east of the most easterly corner of Unit 5 Foundry Industrial Estate, Victoria Street and approximately 272 metres east of the most north-easterly corner of 26 A|nn Street West, Widnes, then proceeding in a generally north easterly direction for approximately 58 metres to a point approximately 216 metres east-south-east of the most easterly corner of Unit 4 Foundry Industrial Estate, Victoria Street and approximately 221 metres east of the most southerly corner of Unit 5 Foundry Industrial Estate, Victoria Street, then proceeding in a generally easterly direction for approximately 45 metres to a point approximately 265 metres east-south-east of the most north-easterly corner of Unit 3 Foundry Industrial Estate, Victoria Street and approximately 265 metres east of the most southerly corner of Unit 5 Foundry Industrial Estate, Victoria Street, then proceeding in a generally east-south-east direction for approximately 102 metres to a point approximately 366 metres east-south-east of the most easterly corner of Unit 3 Foundry Industrial Estate, Victoria Street and approximately 463 metres east of the most north easterly corner of 22 Ann Street West, Widnes, then proceeding in a generally north-north-easterly direction for approximately 19 metres to a point approximately 368 metres east-south-east of the most easterly corner of Unit 3 Foundry Industrial Estate, Victoria Street and approximately 512 metres east of the most south easterly corner of 17 Batherton Close, Widnes then proceeding in a generally east-south, easterly direction for approximately 16 metres to a point approximately 420 metres east-south-east of the most southerly corner of Unit 2 Foundry Industrial Estate, Victoria Street and approximately 533 metres east of the most south-easterly corner of 17 Batherton Close, then proceeding in a generally east-north-easterly direction for approximately 240 metres to a point approximately 606 metres east of the most northerly corner of Unit 4 Foundry Industrial Estate, Victoria Street and approximately 23 metres south of the most south westerly corner of the boundary fencing of the scrap metal yard on the south side of Cornubia Road, Widnes, then proceeding in a generally northern direction for approximately 44 metres to a point approximately 3 metres west-north-west of the most north westerly corner of the boundary fence of the scrap metal yard on the south side of Cornubia Road and approximately 47 metres west-south-west of the stub end of Cornubia Road.’`;
-
-// checkCompressionPerformance(emp);
-checkCompressionPerformance("Hello");
-
-decodeHuffman(encodeHuffman("Helloasdfasdflhjoaiwhe3f0pq823y[0 r  12r]- 1x2-eim 12-30aw ,"));
+huffmanTest("go go gophers");
+const temp1 =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+huffmanTest(temp1);
+const temp2 =
+  "Hello I'm Kota Yatagai living in Japan. I'm 17 years old now, and I'm going to study abroad this year. Huffman compression of this kind of short sentence is going to be bigger size than original size. Since I don't know how to take over this problem, this gonna be the last version of my compression algorithm";
+huffmanTest(temp2);

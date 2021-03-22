@@ -1,11 +1,11 @@
-import { occurrenceArray, bitsArray } from "../../global.d.ts";
+import { occurrenceArray } from "../../global.d.ts";
 
 const partitioning = (
   mda: occurrenceArray,
   start: number,
   end: number,
 ): number => {
-  const pivot: number = mda[end][1];;
+  const pivot: number = mda[end][1];
   let pivotIndex: number = start;
   for (let i: number = start; i < end; i++) {
     if (mda[i][1] > pivot) continue;
