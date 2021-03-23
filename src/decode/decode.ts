@@ -2,11 +2,8 @@ import { bitsTable, dividedObj, rebuiltTreeArray } from "../../global.d.ts";
 import { convertBitsToSymbol } from "../common/convert.ts";
 import { generateBitsTableFromRebuiltTreeArray } from "../common/generateBitsTable.ts";
 
-const rebuildHuffmanTree = (
-  bits: string,
-  resultArray: rebuiltTreeArray,
-): [string, rebuiltTreeArray] => {
-  if (bits === "") return [bits, resultArray];
+const rebuildHuffmanTree = ( bits: string, resultArray: rebuiltTreeArray ): string => {
+  if (bits === "") return bits;
   const firstBits: string = bits.slice(0, 1);
   bits = bits.slice(1);
   if (firstBits === "1") {
@@ -14,15 +11,12 @@ const rebuildHuffmanTree = (
     bits = bits.slice(8);
     const symbol: string = convertBitsToSymbol(symbolBits);
     resultArray[0] = symbol;
-    return [bits, resultArray];
+    return bits;
   }
   resultArray.push([[null], [null]]);
   if (!resultArray[1]) throw new Error("resultArray has no index 1");
-  const result: [string, rebuiltTreeArray] = rebuildHuffmanTree(
-    bits,
-    resultArray[1][0],
-  );
-  return rebuildHuffmanTree(result[0], resultArray[1][1]);
+  const result: string = rebuildHuffmanTree( bits, resultArray[1][0] );
+  return rebuildHuffmanTree(result, resultArray[1][1]);
 };
 
 // 再帰を使うとスタックオーバーフローするのでループで書く
@@ -58,10 +52,7 @@ const spliceString = (string: string, divisionNumber: number): dividedObj => {
 export const decodeHuffman = (encodeResult: string) => {
   const headerBits: dividedObj = spliceString(encodeResult, 16);
   const headerLength: number = parseInt(headerBits.spliced, 2);
-  const treeAndContents: dividedObj = spliceString(
-    headerBits.remaining,
-    headerLength,
-  );
+  const treeAndContents: dividedObj = spliceString( headerBits.remaining, headerLength );
   const rebuiltTree: rebuiltTreeArray = [null];
   rebuildHuffmanTree(treeAndContents.spliced, rebuiltTree);
   const bitsTable: bitsTable = generateBitsTableFromRebuiltTreeArray(rebuiltTree);
