@@ -1,5 +1,6 @@
 import { encodeHuffman } from "../src/encode/encode.ts";
 import { decodeHuffman } from "../src/decode/decode.ts";
+import { padding } from "../src/common/convert.ts";
 
 const green: string = "\u001b[32m";
 const red: string = "\u001b[31m";
@@ -9,10 +10,11 @@ const huffmanTest = (text: string) => {
   console.log(
     `\n${green}-------------------- 😀 Huffman Test --------------------${reset}`,
   );
-  console.log(`      Original Text | ${text}`)
+  console.log(`      Original Text | ${text}`);
   let original: string = "";
   for (let i = 0; i < text.length; i++) {
-    original += text[i].charCodeAt(0).toString(2);
+    const originalSymbolBits: string = text[i].charCodeAt(0).toString(2);
+    original += padding(8, originalSymbolBits);
   }
   const result: string = encodeHuffman(text);
   const compressionQuality: number =
@@ -26,7 +28,9 @@ const huffmanTest = (text: string) => {
     `      Length Change | ${original.length} => ${result.length} (${displayDiff})`,
   );
   const decoded: string = decodeHuffman(result);
-  if(decoded !== text) throw new Error(`Decode result must be ${text}, but got ${decoded}`);
+  if (decoded !== text) {
+    throw new Error(`Decode result must be ${text}, but got ${decoded}`);
+  }
   console.log(
     `${green}---------------　🎉 Successfully passed!!　---------------${reset}\n`,
   );

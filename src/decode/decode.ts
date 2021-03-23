@@ -1,12 +1,12 @@
-import { bitsTable, rebuiltTreeArray, dividedObj } from "../../global.d.ts";
-import { convertBitsToSymbol, spliceString } from "../common/convert.ts";
+import { bitsTable, dividedObj, rebuiltTreeArray } from "../../global.d.ts";
+import { convertBitsToSymbol } from "../common/convert.ts";
 import { generateBitsTableFromRebuiltTreeArray } from "../common/generateBitsTable.ts";
 
 const rebuildHuffmanTree = (
   bits: string,
   resultArray: rebuiltTreeArray,
 ): [string, rebuiltTreeArray] => {
-  if(bits === "") return [bits, resultArray];
+  if (bits === "") return [bits, resultArray];
   const firstBits: string = bits.slice(0, 1);
   bits = bits.slice(1);
   if (firstBits === "1") {
@@ -17,8 +17,11 @@ const rebuildHuffmanTree = (
     return [bits, resultArray];
   }
   resultArray.push([[null], [null]]);
-  if(!resultArray[1]) throw new Error("resultArray has no index 1");
-  const result: [string, rebuiltTreeArray] = rebuildHuffmanTree(bits, resultArray[1][0]);
+  if (!resultArray[1]) throw new Error("resultArray has no index 1");
+  const result: [string, rebuiltTreeArray] = rebuildHuffmanTree(
+    bits,
+    resultArray[1][0],
+  );
   return rebuildHuffmanTree(result[0], resultArray[1][1]);
 };
 
@@ -46,14 +49,22 @@ const parseBits = (bits: string, bitsTable: bitsTable): string => {
   return result;
 };
 
+const spliceString = (string: string, divisionNumber: number): dividedObj => {
+  const spliced: string = string.slice(0, divisionNumber);
+  const remaining: string = string.slice(divisionNumber);
+  return { spliced, remaining };
+};
+
 export const decodeHuffman = (encodeResult: string) => {
   const headerBits: dividedObj = spliceString(encodeResult, 16);
   const headerLength: number = parseInt(headerBits.spliced, 2);
-  const treeAndContents: dividedObj = spliceString(headerBits.remaining, headerLength);
-  const rebuiltTree: rebuiltTreeArray = [ null ];
+  const treeAndContents: dividedObj = spliceString(
+    headerBits.remaining,
+    headerLength,
+  );
+  const rebuiltTree: rebuiltTreeArray = [null];
   rebuildHuffmanTree(treeAndContents.spliced, rebuiltTree);
-  const bitsTable: [string, string][] = new Array(0) as [string, string][];
-  generateBitsTableFromRebuiltTreeArray(rebuiltTree, bitsTable);
+  const bitsTable: bitsTable = generateBitsTableFromRebuiltTreeArray(rebuiltTree);
   const decodedString: string = parseBits(treeAndContents.remaining, bitsTable);
   return decodedString;
 };

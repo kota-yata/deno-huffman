@@ -6,6 +6,6 @@ export type rebuiltTreeArray = [
 export type occurrenceArray = treeArray[];
 export type bitsTable = [string, string][];
 export interface dividedObj {
-  spliced: string,
-  remaining: string
+  spliced: string;
+  remaining: string;
 }

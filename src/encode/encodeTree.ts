@@ -1,11 +1,5 @@
 import { treeArray } from "../../global.d.ts";
-import { convertSymbolToBits } from "../common/convert.ts";
-
-const padding = (len: number, string: string): string => {
-  const pre: string = "0".repeat(len);
-  const result: string = (pre + string).slice(-len);
-  return result;
-};
+import { convertSymbolToBits, padding } from "../common/convert.ts";
 
 export const encodeTree = (
   huffmanTree: treeArray,
